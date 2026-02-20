@@ -652,7 +652,7 @@
       // 3. Confirmar acceso a Aruba con redirect directo
       setTimeout(() => {
         if (postServer) {
-          window.location.href = `https://${postServer}/login?mac=${encodeURIComponent(clientMAC)}&ip=${encodeURIComponent(clientIP)}&action=authenticate&redirect=${encodeURIComponent(redirectURL)}`;
+          window.location.href = `http://${postServer}/login?mac=${encodeURIComponent(clientMAC)}&ip=${encodeURIComponent(clientIP)}&action=authenticate&redirect=${encodeURIComponent(redirectURL)}`;
         } else {
           window.location.href = redirectURL;
         }
