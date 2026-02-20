@@ -30,7 +30,6 @@
       overflow-x: hidden;
     }
 
-    /* Background layers */
     body::before {
       content: '';
       position: fixed;
@@ -42,7 +41,6 @@
       z-index: 0;
     }
 
-    /* Decorative grid */
     body::after {
       content: '';
       position: fixed;
@@ -54,7 +52,6 @@
       z-index: 0;
     }
 
-    /* Floating accent orbs */
     .orb {
       position: fixed;
       border-radius: 50%;
@@ -72,7 +69,6 @@
       50% { transform: translateY(-30px) scale(1.05); }
     }
 
-    /* Card */
     .card {
       position: relative;
       z-index: 1;
@@ -90,7 +86,6 @@
       to   { opacity: 1; transform: translateY(0) scale(1); }
     }
 
-    /* Header stripe */
     .card-header {
       background: linear-gradient(135deg, var(--dark) 0%, var(--blue) 100%);
       padding: 36px 40px 28px;
@@ -113,7 +108,6 @@
       100% { background-position: -200% 0; }
     }
 
-    /* Logo zone */
     .logo-zone {
       display: flex;
       align-items: center;
@@ -122,33 +116,11 @@
       margin-bottom: 24px;
     }
 
-    .logo-placeholder {
-      border: 2px dashed rgba(255,255,255,0.2);
-      border-radius: 12px;
-      padding: 14px 32px;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      color: rgba(255,255,255,0.35);
-      font-family: 'Syne', sans-serif;
-      font-size: 13px;
-      letter-spacing: 0.05em;
-      transition: border-color 0.3s;
-      cursor: pointer;
-      position: relative;
-    }
-
-    .logo-placeholder svg { opacity: 0.4; flex-shrink: 0; }
-
-    /* Si hay imagen cargada */
     #logo-img {
       max-height: 72px;
       max-width: 220px;
       object-fit: contain;
-      display: none;
     }
-
-    #logo-upload { display: none; }
 
     .header-text { text-align: center; }
 
@@ -170,7 +142,6 @@
       font-weight: 300;
     }
 
-    /* Form body */
     .card-body {
       padding: 36px 40px 40px;
     }
@@ -243,10 +214,7 @@
       margin-top: -2px;
     }
 
-    /* Select arrow */
-    .select-wrapper {
-      position: relative;
-    }
+    .select-wrapper { position: relative; }
     .select-wrapper::after {
       content: '';
       position: absolute;
@@ -264,7 +232,6 @@
     select { cursor: pointer; padding-right: 36px; }
     select option[value=""] { color: #aab4c4; }
 
-    /* Divider */
     .divider {
       display: flex;
       align-items: center;
@@ -284,7 +251,6 @@
       white-space: nowrap;
     }
 
-    /* Submit */
     .btn-submit {
       width: 100%;
       padding: 16px;
@@ -296,20 +262,21 @@
       font-size: 16px;
       font-weight: 700;
       letter-spacing: 0.03em;
-      cursor: pointer;
+      cursor: not-allowed;
       margin-top: 8px;
       position: relative;
       overflow: hidden;
-      transition: transform 0.2s, box-shadow 0.2s;
+      transition: transform 0.2s, box-shadow 0.2s, opacity 0.3s;
       box-shadow: 0 8px 24px rgba(254, 83, 11, 0.35);
+      opacity: 0.5;
     }
 
-    .btn-submit:hover {
+    .btn-submit:not(:disabled):hover {
       transform: translateY(-2px);
       box-shadow: 0 12px 32px rgba(254, 83, 11, 0.45);
     }
 
-    .btn-submit:active { transform: translateY(0); }
+    .btn-submit:not(:disabled):active { transform: translateY(0); }
 
     .btn-submit::after {
       content: '';
@@ -327,7 +294,6 @@
       z-index: 1;
     }
 
-    /* Loading spinner */
     .spinner {
       width: 18px; height: 18px;
       border: 2px solid rgba(255,255,255,0.4);
@@ -338,7 +304,6 @@
     }
     @keyframes spin { to { transform: rotate(360deg); } }
 
-    /* Success state */
     .success-screen {
       display: none;
       flex-direction: column;
@@ -395,7 +360,12 @@
       color: var(--blue);
     }
 
-    /* Footer */
+    .redirect-note {
+      margin-top: 14px;
+      font-size: 12.5px;
+      color: #aab4c4;
+    }
+
     .card-footer {
       padding: 16px 40px 20px;
       border-top: 1px solid var(--border);
@@ -417,22 +387,6 @@
       opacity: 0.6;
     }
 
-    /* Tooltip config */
-    .config-note {
-      background: rgba(254, 83, 11, 0.08);
-      border: 1px dashed rgba(254, 83, 11, 0.3);
-      border-radius: 8px;
-      padding: 10px 14px;
-      margin-bottom: 24px;
-      font-size: 12.5px;
-      color: var(--orange);
-      display: flex;
-      align-items: flex-start;
-      gap: 8px;
-    }
-    .config-note svg { flex-shrink: 0; margin-top: 1px; }
-
-    /* Responsive */
     @media (max-width: 520px) {
       .card-body, .card-header { padding-left: 24px; padding-right: 24px; }
       .card-footer { padding-left: 24px; padding-right: 24px; }
@@ -453,29 +407,19 @@
 
   <div class="card">
 
-    <!-- ===== HEADER ===== -->
+    <!-- HEADER -->
     <div class="card-header">
       <div class="logo-zone">
-        <img id="logo-img" src="FOMA NEGATIVO.png" alt="Logo empresa" style="display:block; max-height:150px; max-width:220px; object-fit:contain;" />
+        <img id="logo-img" src="FOMA NEGATIVO.png" alt="Logo empresa" style="max-height:72px; max-width:220px; object-fit:contain;" />
       </div>
-
       <div class="header-text">
         <h1>Acceso a Red <span>de Invitados</span></h1>
         <p>Complete el formulario para conectarse</p>
       </div>
     </div>
 
-    <!-- ===== FORM ===== -->
+    <!-- FORM -->
     <div class="card-body">
-
-      <!-- Nota de configuración — ELIMINAR cuando el endpoint esté conectado -->
-      <div class="config-note" id="config-note">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
-        </svg>
-        <span><b>Configuración pendiente:</b> Reemplaza <code>TU_ENDPOINT_AQUI</code> en el JS con la URL de tu flujo de Power Automate.</span>
-      </div>
-
       <form id="guestForm" novalidate>
 
         <div class="form-row">
@@ -531,7 +475,7 @@
           <span class="error-msg" id="err-visita">Selecciona la empresa que visitas</span>
         </div>
 
-        <button type="submit" class="btn-submit" id="submitBtn">
+        <button type="submit" class="btn-submit" id="submitBtn" disabled>
           <span class="btn-inner">
             <span id="btn-text">Conectarme a la red</span>
             <div class="spinner" id="spinner"></div>
@@ -543,7 +487,7 @@
 
       </form>
 
-      <!-- ===== SUCCESS ===== -->
+      <!-- SUCCESS -->
       <div class="success-screen" id="successScreen">
         <div class="success-icon">
           <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5">
@@ -559,6 +503,7 @@
           </svg>
           Conectado · Red de Invitados
         </div>
+        <p class="redirect-note">Redirigiendo en 3 segundos...</p>
       </div>
 
     </div>
@@ -574,40 +519,44 @@
   </div>
 
   <script>
-    // =====================================================
-    // CONFIGURACIÓN — cambia esta URL por tu endpoint
-    // de Power Automate (HTTP Request trigger)
-    // =====================================================
     const POWER_AUTOMATE_ENDPOINT = 'https://default304706e8844d41998ffe73f5588ab2.d5.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/1962c905338c479d9f0ad3747ffd6243/triggers/manual/paths/invoke?api-version=1';
-    // =====================================================
 
-    // Cargar logo
-    const logoUpload = document.getElementById('logo-upload');
-    const logoImg = document.getElementById('logo-img');
-    const logoPlaceholder = document.getElementById('logo-placeholder');
+    // Leer parámetros que manda Aruba desde la URL
+    const urlParams   = new URLSearchParams(window.location.search);
+    const clientMAC   = urlParams.get('mac')     || '';
+    const clientIP    = urlParams.get('ip')      || '';
+    const postServer  = urlParams.get('post')    || '';
+    const redirectURL = urlParams.get('url')     || 'https://www.google.com';
+    const network     = urlParams.get('network') || '';
+    const site        = urlParams.get('site')    || '';
 
-    logoUpload.addEventListener('change', (e) => {
-      const file = e.target.files[0];
-      if (!file) return;
-      const reader = new FileReader();
-      reader.onload = (ev) => {
-        logoImg.src = ev.target.result;
-        logoImg.style.display = 'block';
-        logoPlaceholder.style.display = 'none';
-      };
-      reader.readAsDataURL(file);
-    });
-
-    // Validación
+    // Validadores
     const validators = {
-      nombre:    (v) => v.trim().length >= 2,
-      apellido:  (v) => v.trim().length >= 2,
-      telefono:  (v) => /^[\d\s\+\-\(\)]{7,20}$/.test(v.trim()),
-      correo:    (v) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v.trim()),
-      empresa:   (v) => v.trim().length >= 2,
-      cargo:     (v) => v.trim().length >= 2,
+      nombre:   (v) => v.trim().length >= 2,
+      apellido: (v) => v.trim().length >= 2,
+      telefono: (v) => /^[\d\s\+\-\(\)]{7,20}$/.test(v.trim()),
+      correo:   (v) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v.trim()),
+      empresa:  (v) => v.trim().length >= 2,
+      cargo:    (v) => v.trim().length >= 2,
     };
 
+    const allFields = ['nombre','apellido','telefono','correo','empresa','cargo'];
+
+    // Verificar si el formulario está completo para habilitar el botón
+    function checkFormComplete() {
+      const fieldsOk = allFields.every(id => {
+        const val = document.getElementById(id).value;
+        return validators[id] ? validators[id](val) : val.trim().length > 0;
+      });
+      const visitaOk = document.getElementById('empresa-visita').value !== '';
+      const btn = document.getElementById('submitBtn');
+      const complete = fieldsOk && visitaOk;
+      btn.disabled = !complete;
+      btn.style.opacity = complete ? '1' : '0.5';
+      btn.style.cursor  = complete ? 'pointer' : 'not-allowed';
+    }
+
+    // Validación visual por campo
     function validateField(id, value) {
       const input = document.getElementById(id);
       const err   = document.getElementById('err-' + id);
@@ -618,16 +567,30 @@
       return ok;
     }
 
-    // Live validation
-    ['nombre','apellido','telefono','correo','empresa','cargo'].forEach(id => {
+    // Listeners de validación + chequeo de botón
+    allFields.forEach(id => {
       const el = document.getElementById(id);
-      el.addEventListener('blur', () => validateField(id, el.value));
       el.addEventListener('input', () => {
         if (el.classList.contains('error')) validateField(id, el.value);
+        checkFormComplete();
+      });
+      el.addEventListener('blur', () => {
+        validateField(id, el.value);
+        checkFormComplete();
       });
     });
 
-    // Form submit
+    document.getElementById('empresa-visita').addEventListener('change', () => {
+      const selectEl  = document.getElementById('empresa-visita');
+      const errVisita = document.getElementById('err-visita');
+      if (selectEl.value) {
+        selectEl.classList.remove('error');
+        errVisita.style.display = 'none';
+      }
+      checkFormComplete();
+    });
+
+    // Submit
     document.getElementById('guestForm').addEventListener('submit', async (e) => {
       e.preventDefault();
 
@@ -641,32 +604,26 @@
       };
       const visita = document.getElementById('empresa-visita').value;
 
-      // Validate all
+      // Validar todos antes de enviar
       let valid = true;
       Object.entries(fields).forEach(([id, val]) => {
         if (!validateField(id, val)) valid = false;
       });
-
-      const selectEl = document.getElementById('empresa-visita');
-      const errVisita = document.getElementById('err-visita');
       if (!visita) {
-        selectEl.classList.add('error');
-        errVisita.style.display = 'block';
+        document.getElementById('empresa-visita').classList.add('error');
+        document.getElementById('err-visita').style.display = 'block';
         valid = false;
-      } else {
-        selectEl.classList.remove('error');
-        errVisita.style.display = 'none';
       }
-
       if (!valid) return;
 
-      // UI loading
+      // UI cargando
       const btn     = document.getElementById('submitBtn');
       const spinner = document.getElementById('spinner');
       const btnText = document.getElementById('btn-text');
       const btnIcon = document.getElementById('btn-icon');
 
       btn.disabled = true;
+      btn.style.opacity = '0.8';
       spinner.style.display = 'block';
       btnIcon.style.display = 'none';
       btnText.textContent = 'Registrando...';
@@ -674,33 +631,45 @@
       const payload = {
         ...fields,
         empresa_visita: visita,
+        mac:       clientMAC,
+        ip:        clientIP,
+        red:       network,
+        sitio:     site,
         fecha_hora: new Date().toLocaleString('es-PA', { timeZone: 'America/Panama' }),
       };
 
       try {
-        
-          const res = await fetch(POWER_AUTOMATE_ENDPOINT, {
+        // 1. Enviar datos a Power Automate / Excel
+        await fetch(POWER_AUTOMATE_ENDPOINT, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload),
+        });
+
+        // 2. Confirmar acceso a Aruba
+        if (postServer) {
+          await fetch(`https://${postServer}/login`, {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(payload),
+            mode: 'no-cors',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: `mac=${encodeURIComponent(clientMAC)}&ip=${encodeURIComponent(clientIP)}&action=authenticate`,
           });
-          if (!res.ok) throw new Error('Error en el servidor');
-          showSuccess();
-        
+        }
       } catch (err) {
-        btn.disabled = false;
-        spinner.style.display = 'none';
-        btnIcon.style.display = 'block';
-        btnText.textContent = 'Conectarme a la red';
-        alert('Hubo un problema al registrar tu acceso. Por favor intenta de nuevo.');
+        // Aunque falle el fetch de Aruba por CORS, continuamos
+        console.warn('Error en fetch:', err);
       }
+
+      // 3. Mostrar éxito y redirigir
+      showSuccess();
+      setTimeout(() => {
+        window.location.href = redirectURL;
+      }, 3000);
     });
 
     function showSuccess() {
       document.getElementById('guestForm').style.display = 'none';
-      const s = document.getElementById('successScreen');
-      s.style.display = 'flex';
-      document.getElementById('config-note') && (document.getElementById('config-note').style.display = 'none');
+      document.getElementById('successScreen').style.display = 'flex';
     }
   </script>
 </body>
