@@ -1,0 +1,707 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Portal de Acceso — Red de Invitados</title>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --orange: #fe530b;
+      --dark: #0b1e3a;
+      --blue: #0f3f78;
+      --white: #ffffff;
+      --light: #f4f7fb;
+      --border: rgba(15, 63, 120, 0.15);
+      --shadow: 0 20px 60px rgba(11, 30, 58, 0.15);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--dark);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px 16px;
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    /* Background layers */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 80% 60% at 110% -10%, rgba(254, 83, 11, 0.18) 0%, transparent 60%),
+        radial-gradient(ellipse 60% 80% at -20% 110%, rgba(15, 63, 120, 0.4) 0%, transparent 60%),
+        linear-gradient(160deg, #0b1e3a 0%, #0d2748 50%, #0b1e3a 100%);
+      z-index: 0;
+    }
+
+    /* Decorative grid */
+    body::after {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+      background-size: 60px 60px;
+      z-index: 0;
+    }
+
+    /* Floating accent orbs */
+    .orb {
+      position: fixed;
+      border-radius: 50%;
+      filter: blur(80px);
+      opacity: 0.12;
+      animation: float 8s ease-in-out infinite;
+      z-index: 0;
+    }
+    .orb-1 { width: 400px; height: 400px; background: var(--orange); top: -100px; right: -100px; animation-delay: 0s; }
+    .orb-2 { width: 300px; height: 300px; background: var(--blue); bottom: -80px; left: -80px; animation-delay: 3s; }
+    .orb-3 { width: 200px; height: 200px; background: var(--orange); bottom: 30%; right: 5%; animation-delay: 5s; opacity: 0.07; }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0px) scale(1); }
+      50% { transform: translateY(-30px) scale(1.05); }
+    }
+
+    /* Card */
+    .card {
+      position: relative;
+      z-index: 1;
+      background: rgba(255, 255, 255, 0.97);
+      border-radius: 24px;
+      width: 100%;
+      max-width: 560px;
+      overflow: hidden;
+      box-shadow: var(--shadow), 0 0 0 1px rgba(255,255,255,0.05);
+      animation: slideUp 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
+    }
+
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(40px) scale(0.97); }
+      to   { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    /* Header stripe */
+    .card-header {
+      background: linear-gradient(135deg, var(--dark) 0%, var(--blue) 100%);
+      padding: 36px 40px 28px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .card-header::after {
+      content: '';
+      position: absolute;
+      bottom: -1px; left: 0; right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--orange), #ff8c5a, var(--orange));
+      background-size: 200% 100%;
+      animation: shimmer 3s linear infinite;
+    }
+
+    @keyframes shimmer {
+      0% { background-position: 200% 0; }
+      100% { background-position: -200% 0; }
+    }
+
+    /* Logo zone */
+    .logo-zone {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 72px;
+      margin-bottom: 24px;
+    }
+
+    .logo-placeholder {
+      border: 2px dashed rgba(255,255,255,0.2);
+      border-radius: 12px;
+      padding: 14px 32px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: rgba(255,255,255,0.35);
+      font-family: 'Syne', sans-serif;
+      font-size: 13px;
+      letter-spacing: 0.05em;
+      transition: border-color 0.3s;
+      cursor: pointer;
+      position: relative;
+    }
+
+    .logo-placeholder svg { opacity: 0.4; flex-shrink: 0; }
+
+    /* Si hay imagen cargada */
+    #logo-img {
+      max-height: 72px;
+      max-width: 220px;
+      object-fit: contain;
+      display: none;
+    }
+
+    #logo-upload { display: none; }
+
+    .header-text { text-align: center; }
+
+    .header-text h1 {
+      font-family: 'Syne', sans-serif;
+      font-size: clamp(20px, 4vw, 26px);
+      font-weight: 800;
+      color: var(--white);
+      letter-spacing: -0.02em;
+      line-height: 1.2;
+    }
+
+    .header-text h1 span { color: var(--orange); }
+
+    .header-text p {
+      margin-top: 6px;
+      color: rgba(255,255,255,0.5);
+      font-size: 13.5px;
+      font-weight: 300;
+    }
+
+    /* Form body */
+    .card-body {
+      padding: 36px 40px 40px;
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      margin-bottom: 16px;
+      animation: fadeIn 0.5s ease both;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .form-group:nth-child(1) { animation-delay: 0.1s; }
+    .form-group:nth-child(2) { animation-delay: 0.15s; }
+    .form-group:nth-child(3) { animation-delay: 0.2s; }
+    .form-group:nth-child(4) { animation-delay: 0.25s; }
+    .form-group:nth-child(5) { animation-delay: 0.3s; }
+    .form-group:nth-child(6) { animation-delay: 0.35s; }
+    .form-group:nth-child(7) { animation-delay: 0.4s; }
+
+    label {
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--blue);
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    input, select {
+      width: 100%;
+      padding: 13px 16px;
+      border: 1.5px solid var(--border);
+      border-radius: 10px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 15px;
+      color: var(--dark);
+      background: var(--light);
+      transition: border-color 0.25s, box-shadow 0.25s, background 0.25s;
+      outline: none;
+      appearance: none;
+      -webkit-appearance: none;
+    }
+
+    input::placeholder { color: #aab4c4; }
+
+    input:focus, select:focus {
+      border-color: var(--orange);
+      background: #fff;
+      box-shadow: 0 0 0 4px rgba(254, 83, 11, 0.1);
+    }
+
+    input.valid { border-color: #22c55e; }
+    input.error, select.error { border-color: #ef4444; box-shadow: 0 0 0 4px rgba(239,68,68,0.1); }
+
+    .error-msg {
+      font-size: 11.5px;
+      color: #ef4444;
+      display: none;
+      margin-top: -2px;
+    }
+
+    /* Select arrow */
+    .select-wrapper {
+      position: relative;
+    }
+    .select-wrapper::after {
+      content: '';
+      position: absolute;
+      right: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 0; height: 0;
+      border-left: 5px solid transparent;
+      border-right: 5px solid transparent;
+      border-top: 6px solid var(--blue);
+      pointer-events: none;
+      opacity: 0.5;
+    }
+
+    select { cursor: pointer; padding-right: 36px; }
+    select option[value=""] { color: #aab4c4; }
+
+    /* Divider */
+    .divider {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin: 4px 0 20px;
+    }
+    .divider::before, .divider::after {
+      content: ''; flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+    .divider span {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: #aab4c4;
+      white-space: nowrap;
+    }
+
+    /* Submit */
+    .btn-submit {
+      width: 100%;
+      padding: 16px;
+      background: linear-gradient(135deg, var(--orange) 0%, #ff7940 100%);
+      color: white;
+      border: none;
+      border-radius: 12px;
+      font-family: 'Syne', sans-serif;
+      font-size: 16px;
+      font-weight: 700;
+      letter-spacing: 0.03em;
+      cursor: pointer;
+      margin-top: 8px;
+      position: relative;
+      overflow: hidden;
+      transition: transform 0.2s, box-shadow 0.2s;
+      box-shadow: 0 8px 24px rgba(254, 83, 11, 0.35);
+    }
+
+    .btn-submit:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 32px rgba(254, 83, 11, 0.45);
+    }
+
+    .btn-submit:active { transform: translateY(0); }
+
+    .btn-submit::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(255,255,255,0.15) 0%, transparent 50%);
+    }
+
+    .btn-submit .btn-inner {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* Loading spinner */
+    .spinner {
+      width: 18px; height: 18px;
+      border: 2px solid rgba(255,255,255,0.4);
+      border-top-color: white;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      display: none;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* Success state */
+    .success-screen {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 60px 40px;
+      min-height: 300px;
+    }
+
+    .success-icon {
+      width: 72px; height: 72px;
+      background: linear-gradient(135deg, #22c55e, #16a34a);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 24px;
+      animation: pop 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
+      box-shadow: 0 12px 32px rgba(34,197,94,0.35);
+    }
+
+    @keyframes pop {
+      from { transform: scale(0); opacity: 0; }
+      to   { transform: scale(1); opacity: 1; }
+    }
+
+    .success-screen h2 {
+      font-family: 'Syne', sans-serif;
+      font-size: 24px;
+      font-weight: 800;
+      color: var(--dark);
+      margin-bottom: 10px;
+    }
+
+    .success-screen p {
+      color: #64748b;
+      font-size: 15px;
+      line-height: 1.6;
+      max-width: 320px;
+    }
+
+    .wifi-badge {
+      margin-top: 28px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--light);
+      border: 1.5px solid var(--border);
+      border-radius: 100px;
+      padding: 10px 20px;
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--blue);
+    }
+
+    /* Footer */
+    .card-footer {
+      padding: 16px 40px 20px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+
+    .card-footer span {
+      font-size: 12px;
+      color: #aab4c4;
+    }
+
+    .card-footer .dot {
+      width: 4px; height: 4px;
+      border-radius: 50%;
+      background: var(--orange);
+      opacity: 0.6;
+    }
+
+    /* Tooltip config */
+    .config-note {
+      background: rgba(254, 83, 11, 0.08);
+      border: 1px dashed rgba(254, 83, 11, 0.3);
+      border-radius: 8px;
+      padding: 10px 14px;
+      margin-bottom: 24px;
+      font-size: 12.5px;
+      color: var(--orange);
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+    }
+    .config-note svg { flex-shrink: 0; margin-top: 1px; }
+
+    /* Responsive */
+    @media (max-width: 520px) {
+      .card-body, .card-header { padding-left: 24px; padding-right: 24px; }
+      .card-footer { padding-left: 24px; padding-right: 24px; }
+      .form-row { grid-template-columns: 1fr; gap: 0; }
+      .success-screen { padding: 48px 24px; }
+    }
+
+    @media (max-width: 360px) {
+      .card-body, .card-header { padding-left: 18px; padding-right: 18px; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+  <div class="orb orb-3"></div>
+
+  <div class="card">
+
+    <!-- ===== HEADER ===== -->
+    <div class="card-header">
+      <div class="logo-zone">
+        <img id="logo-img" src="FOMA NEGATIVO.png" alt="Logo empresa" style="display:block; max-height:150px; max-width:220px; object-fit:contain;" />
+      </div>
+
+      <div class="header-text">
+        <h1>Acceso a Red <span>de Invitados</span></h1>
+        <p>Complete el formulario para conectarse</p>
+      </div>
+    </div>
+
+    <!-- ===== FORM ===== -->
+    <div class="card-body">
+
+      <!-- Nota de configuración — ELIMINAR cuando el endpoint esté conectado -->
+      <div class="config-note" id="config-note">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+        </svg>
+        <span><b>Configuración pendiente:</b> Reemplaza <code>TU_ENDPOINT_AQUI</code> en el JS con la URL de tu flujo de Power Automate.</span>
+      </div>
+
+      <form id="guestForm" novalidate>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="nombre">Nombre</label>
+            <input type="text" id="nombre" name="nombre" placeholder="Ej. María" autocomplete="given-name" />
+            <span class="error-msg" id="err-nombre">Ingresa tu nombre</span>
+          </div>
+          <div class="form-group">
+            <label for="apellido">Apellido</label>
+            <input type="text" id="apellido" name="apellido" placeholder="Ej. González" autocomplete="family-name" />
+            <span class="error-msg" id="err-apellido">Ingresa tu apellido</span>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="telefono">Número de Teléfono</label>
+          <input type="tel" id="telefono" name="telefono" placeholder="Ej. +507 6000-0000" autocomplete="tel" />
+          <span class="error-msg" id="err-telefono">Ingresa un número válido</span>
+        </div>
+
+        <div class="form-group">
+          <label for="correo">Correo Electrónico</label>
+          <input type="email" id="correo" name="correo" placeholder="nombre@empresa.com" autocomplete="email" />
+          <span class="error-msg" id="err-correo">Ingresa un correo válido</span>
+        </div>
+
+        <div class="divider"><span>Información empresarial</span></div>
+
+        <div class="form-group">
+          <label for="empresa">Empresa</label>
+          <input type="text" id="empresa" name="empresa" placeholder="Nombre de tu empresa" autocomplete="organization" />
+          <span class="error-msg" id="err-empresa">Ingresa tu empresa</span>
+        </div>
+
+        <div class="form-group">
+          <label for="cargo">Cargo</label>
+          <input type="text" id="cargo" name="cargo" placeholder="Ej. Gerente Comercial" autocomplete="organization-title" />
+          <span class="error-msg" id="err-cargo">Ingresa tu cargo</span>
+        </div>
+
+        <div class="form-group">
+          <label for="empresa-visita">Empresa que visita</label>
+          <div class="select-wrapper">
+            <select id="empresa-visita" name="empresa_visita">
+              <option value="">Selecciona una opción...</option>
+              <option value="Adok">Adok</option>
+              <option value="AS Graphics">AS Graphics</option>
+              <option value="32 One">32 One</option>
+              <option value="Lucas">Lucas</option>
+            </select>
+          </div>
+          <span class="error-msg" id="err-visita">Selecciona la empresa que visitas</span>
+        </div>
+
+        <button type="submit" class="btn-submit" id="submitBtn">
+          <span class="btn-inner">
+            <span id="btn-text">Conectarme a la red</span>
+            <div class="spinner" id="spinner"></div>
+            <svg id="btn-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <path d="M5 12h14M12 5l7 7-7 7"/>
+            </svg>
+          </span>
+        </button>
+
+      </form>
+
+      <!-- ===== SUCCESS ===== -->
+      <div class="success-screen" id="successScreen">
+        <div class="success-icon">
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5">
+            <polyline points="20 6 9 17 4 12"/>
+          </svg>
+        </div>
+        <h2>¡Bienvenido!</h2>
+        <p>Tu acceso ha sido registrado. Ya puedes navegar en la red de invitados.</p>
+        <div class="wifi-badge">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M5 12.55a11 11 0 0 1 14.08 0"/><path d="M1.42 9a16 16 0 0 1 21.16 0"/>
+            <path d="M8.53 16.11a6 6 0 0 1 6.95 0"/><line x1="12" y1="20" x2="12.01" y2="20"/>
+          </svg>
+          Conectado · Red de Invitados
+        </div>
+      </div>
+
+    </div>
+
+    <div class="card-footer">
+      <span>Red segura</span>
+      <div class="dot"></div>
+      <span>Uso empresarial</span>
+      <div class="dot"></div>
+      <span>Acceso controlado</span>
+    </div>
+
+  </div>
+
+  <script>
+    // =====================================================
+    // CONFIGURACIÓN — cambia esta URL por tu endpoint
+    // de Power Automate (HTTP Request trigger)
+    // =====================================================
+    const POWER_AUTOMATE_ENDPOINT = 'https://default304706e8844d41998ffe73f5588ab2.d5.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/1962c905338c479d9f0ad3747ffd6243/triggers/manual/paths/invoke?api-version=1';
+    // =====================================================
+
+    // Cargar logo
+    const logoUpload = document.getElementById('logo-upload');
+    const logoImg = document.getElementById('logo-img');
+    const logoPlaceholder = document.getElementById('logo-placeholder');
+
+    logoUpload.addEventListener('change', (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = (ev) => {
+        logoImg.src = ev.target.result;
+        logoImg.style.display = 'block';
+        logoPlaceholder.style.display = 'none';
+      };
+      reader.readAsDataURL(file);
+    });
+
+    // Validación
+    const validators = {
+      nombre:    (v) => v.trim().length >= 2,
+      apellido:  (v) => v.trim().length >= 2,
+      telefono:  (v) => /^[\d\s\+\-\(\)]{7,20}$/.test(v.trim()),
+      correo:    (v) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v.trim()),
+      empresa:   (v) => v.trim().length >= 2,
+      cargo:     (v) => v.trim().length >= 2,
+    };
+
+    function validateField(id, value) {
+      const input = document.getElementById(id);
+      const err   = document.getElementById('err-' + id);
+      const ok    = validators[id] ? validators[id](value) : value.trim().length > 0;
+      input.classList.toggle('error', !ok);
+      input.classList.toggle('valid', ok);
+      if (err) err.style.display = ok ? 'none' : 'block';
+      return ok;
+    }
+
+    // Live validation
+    ['nombre','apellido','telefono','correo','empresa','cargo'].forEach(id => {
+      const el = document.getElementById(id);
+      el.addEventListener('blur', () => validateField(id, el.value));
+      el.addEventListener('input', () => {
+        if (el.classList.contains('error')) validateField(id, el.value);
+      });
+    });
+
+    // Form submit
+    document.getElementById('guestForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const fields = {
+        nombre:   document.getElementById('nombre').value,
+        apellido: document.getElementById('apellido').value,
+        telefono: document.getElementById('telefono').value,
+        correo:   document.getElementById('correo').value,
+        empresa:  document.getElementById('empresa').value,
+        cargo:    document.getElementById('cargo').value,
+      };
+      const visita = document.getElementById('empresa-visita').value;
+
+      // Validate all
+      let valid = true;
+      Object.entries(fields).forEach(([id, val]) => {
+        if (!validateField(id, val)) valid = false;
+      });
+
+      const selectEl = document.getElementById('empresa-visita');
+      const errVisita = document.getElementById('err-visita');
+      if (!visita) {
+        selectEl.classList.add('error');
+        errVisita.style.display = 'block';
+        valid = false;
+      } else {
+        selectEl.classList.remove('error');
+        errVisita.style.display = 'none';
+      }
+
+      if (!valid) return;
+
+      // UI loading
+      const btn     = document.getElementById('submitBtn');
+      const spinner = document.getElementById('spinner');
+      const btnText = document.getElementById('btn-text');
+      const btnIcon = document.getElementById('btn-icon');
+
+      btn.disabled = true;
+      spinner.style.display = 'block';
+      btnIcon.style.display = 'none';
+      btnText.textContent = 'Registrando...';
+
+      const payload = {
+        ...fields,
+        empresa_visita: visita,
+        fecha_hora: new Date().toLocaleString('es-PA', { timeZone: 'America/Panama' }),
+      };
+
+      try {
+        
+          const res = await fetch(POWER_AUTOMATE_ENDPOINT, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload),
+          });
+          if (!res.ok) throw new Error('Error en el servidor');
+          showSuccess();
+        
+      } catch (err) {
+        btn.disabled = false;
+        spinner.style.display = 'none';
+        btnIcon.style.display = 'block';
+        btnText.textContent = 'Conectarme a la red';
+        alert('Hubo un problema al registrar tu acceso. Por favor intenta de nuevo.');
+      }
+    });
+
+    function showSuccess() {
+      document.getElementById('guestForm').style.display = 'none';
+      const s = document.getElementById('successScreen');
+      s.style.display = 'flex';
+      document.getElementById('config-note') && (document.getElementById('config-note').style.display = 'none');
+    }
+  </script>
+</body>
+</html>
